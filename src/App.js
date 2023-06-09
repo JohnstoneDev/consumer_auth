@@ -1,18 +1,31 @@
-import './App.css';
+import { useEffect, useState } from "react";
+
+import { Main  } from './Components/Main';
 
 function App() {
+  const [ message, setMessage ] = useState('Hello There');
+
+  function getMessage(){
+    fetch('http://localhost:3000/')
+    .then(r => r.ok? r.json() : console.log(r))
+    .then(d => setMessage(d.message))
+    .catch(e => console.log(e.message));
+  }
+
+  useEffect(() => {
+    const messageTimeout = setTimeout(() => {
+      getMessage();
+    },3000)
+
+    return () => clearTimeout(messageTimeout);
+  })
+
   return (
-    <div className="App">
-      <header className="App-header bg-black bg-blend-darken">
-        <h1 className='text-4xl text-slate-300 animate-pulse'> React Template Repository with the following packages Pre-installed :</h1>      
-        <ol className='pt-5'>
-           <li>React Router (v5) </li>
-           <li>Tailwind CSS </li>
-            <li> Configuration to use a proxy server.</li>
-            <li>React start script modified to use openssl legacy provider.</li>
-        </ol>
-      
-      </header>
+    <div 
+      className
+      ="text-2xl text-center font-mono bg-neutral-800 text-slate-300 h-screen space-y-4">
+      <h1 className="text-4xl tracking-wider pb-5">{message}</h1>
+      <Main />
     </div>
   );
 }
